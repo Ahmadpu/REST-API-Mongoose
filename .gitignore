@@ -1,0 +1,3 @@
+#drop node modules
+node_modules/
+dig_search.txt

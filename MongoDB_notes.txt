@@ -1,0 +1,13 @@
+db.students.find({
+"age":{$gte: "15"}
+})
+db.students.find({
+"age":{$lt: "15"}
+})
+db.students.find({
+"age":{$lte: "15"}
+})
+db.students.find({
+"age":{$ne: "15"}
+}).pretty()
+db.students.findOne()
