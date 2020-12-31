@@ -1,18 +1,39 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const mongoose = require('mongoose');
+const path = require('path');
+
 const bodyParser = require('body-parser');
 
 const productsRoutes = require('./api/routes/products')
 const ordersRoutes = require('./api/routes/orders');
+const userRoutes = require('./api/routes/user');
+
+//MongoDB configuration
+const dbConfig = require('../api/api/dbconfig');
+const mongoose = require('mongoose');
+
+mongoose.Promise =global.Promise;
 // MongoDB connection
-mongoose.connect('mongodb+srv://node-rest:<password>@node-rest-shop.b6c66.mongodb.net/<node-rest-shop>?retryWrites=true&w=majority',{
-useMongoClient : true
+
+                    // mongoose.connect('mongodb+srv://node-rest:<node-rest>@node-rest-shop.b6c66.mongodb.net/<node-rest-shop>?retryWrites=true&w=majority',
+                    // {  useNewUrlParser: true }
+                    // )
+
+mongoose.connect(dbConfig.url,{
+    useNewUrlParser : true
+}).then(()=>{
+    console.log("Db connected successfully");
+}).catch(err=>{
+        console.log("db not connected due to some error",err);
+        process.exit();
 })
+
+
 
 //Morgan third-party middleware
 app.use(morgan('dev'));
+app.use('./uploads', express.static(path.join(__dirname, './uploads')));
 
 // bodyparser 
 
@@ -25,7 +46,7 @@ app.use((req,res,next) =>{
     res.header('Access-Control-Allow-Origin','*');
     res.header('Access-Control-Allow-Headers', 'Origin,X-Requested with, Content-Type, Accept, Authorization',
     {
-        useMongoClient : true
+        
     });
     if(req.method === 'OPTIONS'){
         res.header('Access-Control-Allow-Methods','PUT,POST,PATCH,DELETE,GET');
@@ -37,6 +58,7 @@ app.use((req,res,next) =>{
 //Routes which handles requests
 app.use('/products' , productsRoutes);
 app.use('/orders' , ordersRoutes);
+app.use('/user', userRoutes);
 
 // Handling Error
 app.use((req,res,next) => {
