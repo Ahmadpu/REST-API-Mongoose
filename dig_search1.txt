@@ -1,0 +1,5 @@
+req.body.?:
+res : the response should be also self descriptive.
+RESTFUL API
+WEB APP GUI
+CLI GUI
